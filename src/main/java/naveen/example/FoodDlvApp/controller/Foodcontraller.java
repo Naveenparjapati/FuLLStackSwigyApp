@@ -40,6 +40,9 @@ public class Foodcontraller {
 	    } catch (JsonProcessingException ex) {
 	        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid JSON format");
 	    }
+	    
+	    
+	    
 	    FoodResponse response = foodservice.addFood(request, file);
 	    return response;
 	}
