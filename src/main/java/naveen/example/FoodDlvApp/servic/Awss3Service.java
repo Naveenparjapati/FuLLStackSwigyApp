@@ -19,6 +19,7 @@ import naveen.example.FoodDlvApp.io.FoodResponse;
 import naveen.example.FoodDlvApp.repository.FoodRepository;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectResponse;
 
@@ -157,6 +158,31 @@ public class Awss3Service implements foodService{
 	return convertToResponse(extngfood)	;
 	
 	}
+
+	@Override
+	public boolean deleteFile(String filename) {
+		// TODO Auto-generated method stub
+		DeleteObjectRequest deleteObjectRequest=DeleteObjectRequest.builder()
+				.bucket(bucketName)
+				.key(filename)
+				.build();
+		s3Client.deleteObject(deleteObjectRequest);
+				
+		return true;
+	}
+
+	@Override
+	public void deleteFood(String id) {
+		// TODO Auto-generated method stub
+	 FoodResponse  response	=readFood(id);
+	 String imageUrl=response.getImageUrl();
+	String filename= imageUrl.substring(imageUrl.lastIndexOf("/")+1);
+	boolean isFileDelete=deleteFile(filename);
+	if(isFileDelete)
+	{
+		foodRepository.deleteById(response.getId());
+	}
+}
 
 
 
